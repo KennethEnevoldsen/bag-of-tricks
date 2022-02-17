@@ -1,5 +1,6 @@
 # Bag of Tricks
-Kenneth Enevoldsen personal utility functions.
+Kenneth Enevoldsen personal utility functions. Typically include neat simple functions
+implementing efficient tricks.
 
 
 # Installation
@@ -25,3 +26,8 @@ from bagoftricks.names import create_run_name
 create_run_name()
 # '2021-10-28-19.55_brainy-mole'
 ```
+
+
+---- 
+*Note*: This package is not intended to be productionfriendly. If you want to use it in 
+production I strongly recommend extracting the desired function.
