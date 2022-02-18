@@ -23,6 +23,6 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     include_package_data=True,
     # external packages as dependencies
-    install_requires=["coolname==1.1.0"],
+    install_requires=["coolname==1.1.0", "nltk==3.5", "spacy>=3.0.0,<3.4.0"],
     keywords="utilities",
 )
