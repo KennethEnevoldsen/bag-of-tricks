@@ -16,7 +16,8 @@ pip install git+https://github.com/KennethEnevoldsen/bag-of-tricks
     │   ├── batch               <- generate batch out of iterable
     │   ├── mean_update         <- update/calculate mean from iterable
     │   ├── shuffle_buffer      <- create a shuffle buffer on iterable
-    │   ├── spacy_tokenizer     <- A fast spacy tokenizer wrapping the NLTK tokenizer
+    │   ├── spacy_tokenizer     <- A fast spacy tokenizer wrapping the NLTK tokenizer (potentially outdated)
+    │   ├── json_utls.          <- a function for merge_jsonl files potentially randomly 
     │   └── reapeatable_gen.py  <- make a generator repeatable  
     │
 
