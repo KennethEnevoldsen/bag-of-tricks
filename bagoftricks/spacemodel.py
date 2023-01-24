@@ -14,12 +14,15 @@ to its sentence form
 
 requires:
     spacy
+    tqdm
+    numpy
     (datasets)
 """
 
 from collections import defaultdict
 from typing import Iterable
 
+import numpy as np
 import spacy
 import tqdm
 from spacy.tokens import Doc
@@ -45,13 +48,18 @@ class SpaceModel:
 
         docs = self.nlp.pipe(texts, **kwargs)
         for doc in tqdm.tqdm(docs):
-            self.update(doc)
+            self.__update_from_sample(doc)
+
+    def update(self, doc: Doc, **kwargs) -> None:
+        docs = self.nlp.pipe(texts, **kwargs)
+        for doc in tqdm.tqdm(docs):
+            self.__update_from_sample(doc)
 
     def reset(self) -> None:
         self.followed_by_space_diff = defaultdict(int)
         self.preceded_by_space_diff = defaultdict(int)
 
-    def update(self, doc: Doc) -> None:
+    def __update_from_sample(self, doc: Doc) -> None:
         for prev_tok, tok in zip(doc, doc[1:]):  # skips the last token
             self.followed_by_space_diff[tok.text] += 1 if tok.whitespace_ else -1
             self.preceded_by_space_diff[tok.text] += 1 if prev_tok.whitespace_ else -1
@@ -75,6 +83,23 @@ class SpaceModel:
             token_followed_by_space = diff >= 0
             followed_by_space.append(token_followed_by_space)
         return followed_by_space
+
+    def evaluate(self, texts: Iterable[str]) -> None:
+        docs = self.nlp.pipe(texts)
+
+        preds = []
+        y = []
+        for doc in tqdm.tqdm(docs):
+            _y_hat = self.__followed_by_space_doc(doc)
+            _y = [bool(t.whitespace_) for t in doc]
+            preds.extend(_y_hat)
+            y.extend(_y)
+
+        # calculate accuracy
+        preds = np.array(preds)
+        y = np.array(y)
+        acc = (preds == y).mean()
+        return acc
 
 
 ## --- Utility ------------------------------------------
@@ -141,8 +166,16 @@ if __name__ == "__main__":
     doc = Doc(model.nlp.vocab, words=tokens, spaces=next_is_space)
     print(doc)
 
-    model.fit(load_texts("da", 10_000))
+    texts = load_texts("da", 50_000)  # 
+    model.fit(texts[:49_000])
     next_is_space = model.followed_by_space(tokens)
 
     doc = Doc(model.nlp.vocab, words=tokens, spaces=next_is_space)
     print(doc)
+
+    # evaluate
+    acc = model.evaluate(texts[49_000:])
+    print(f"Accuracy: {acc:.2%}")
+
+    # on 10-19k samples it obtains 97.5% accuracy
+    # on 49k samples it obtains 97.6% accuracy
