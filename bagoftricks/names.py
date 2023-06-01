@@ -1,12 +1,13 @@
-
 from typing import Optional
 
 
-def create_run_name(custom_name: str = None,
-                    date: bool = True,
-                    date_format: Optional[str] = '%Y-%m-%d-%H.%M',
-                    n_slugs: int = 2,
-                    suffix: str = "") -> str:
+def create_run_name(
+    custom_name: str = None,
+    date: bool = True,
+    date_format: Optional[str] = "%Y-%m-%d-%H.%M",
+    n_slugs: int = 2,
+    suffix: str = "",
+) -> str:
     """A function for generating run names.
 
     Args:
@@ -29,8 +30,8 @@ def create_run_name(custom_name: str = None,
 
     if date_format:
         from datetime import datetime
-        name = datetime.today().strftime('%Y-%m-%d-%H.%M') + "_" + name
+
+        name = datetime.today().strftime("%Y-%m-%d-%H.%M") + "_" + name
 
     name += suffix
     return name
-

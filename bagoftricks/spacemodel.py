@@ -166,7 +166,7 @@ if __name__ == "__main__":
     doc = Doc(model.nlp.vocab, words=tokens, spaces=next_is_space)
     print(doc)
 
-    texts = load_texts("da", 50_000)  # 
+    texts = load_texts("da", 50_000)
     model.fit(texts[:49_000])
     next_is_space = model.followed_by_space(tokens)
 
